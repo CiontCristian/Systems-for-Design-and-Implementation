@@ -239,9 +239,14 @@ public class UI {
         return new PurchasedDTO(bookID, clientID);
     }
 
-    private void buyBook() throws IOException{
+    private void buyBook() throws IOException {
         PurchasedDTO bought = restTemplate.postForObject(URL_purchased, readPurchased(), PurchasedDTO.class);
-        System.out.println(bought);
+        if (bought == null) {
+            System.out.println("NULL");
+            throw new RuntimeException("Invalid bookID or clientID!");
+        } else {
+            System.out.println(bought);
+        }
     }
 
 }
