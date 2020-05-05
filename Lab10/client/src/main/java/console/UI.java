@@ -1,34 +1,26 @@
-package ui;
+package console;
 
-import domain.Book;
-import domain.Client;
-import domain.Purchased;
-import domain.validators.ValidatorException;
+import dto.*;
+import lab10.core.domain.Book;
+import lab10.core.domain.Purchased;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import service.BookService;
-import service.ClientService;
-import service.PurchasedService;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Set;
 
 @Component
-public class Console {
-
-    @Autowired
-    private BookService bookService;
-
-    @Autowired
-    private ClientService clientService;
-
-    @Autowired
-    private PurchasedService purchasedService;
-
+public class UI {
     private final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+    public static final String URL_books = "http://localhost:8080/api/books";
+    public static final String URL_clients = "http://localhost:8080/api/clients";
+    public static final String URL_purchased = "http://localhost:8080/api/tran";
+
+    @Autowired
+    private RestTemplate restTemplate;
+
 
     public void printMainMenu(){
         String menu="0.Exit"+"\n"+
@@ -109,12 +101,9 @@ public class Console {
                         updateBook();
                         break;
                     case 4:
-
-                        break;
-                    case 5:
                         printAllBooks();
                         break;
-                    case 6:
+                    case 5:
                         printSortedBooks();
                         break;
                     default:
@@ -146,9 +135,6 @@ public class Console {
                         updateClient();
                         break;
                     case 4:
-
-                        break;
-                    case 5:
                         printAllClients();
                         break;
                     default:
@@ -161,136 +147,101 @@ public class Console {
         }
     }
 
-
-    private void printAllBooks() {
-        List<Book> books = bookService.getAll();
-        books.forEach(System.out::println);
+    public void printAllBooks(){
+        BooksDTO allBooks = restTemplate.getForObject(URL_books, BooksDTO.class);
+        System.out.println(allBooks);
     }
 
-    private void printSortedBooks(){
-        List<Book> sortedBooks = bookService.sortAll();
-        sortedBooks.forEach(System.out::println);
+    public void printSortedBooks(){
+        BooksDTO sortedBooks = restTemplate.getForObject(URL_books + "/sorted", BooksDTO.class);
+        System.out.println(sortedBooks);
     }
 
+    private BookDTO readBook() throws IOException{
+        System.out.println("Read book {id,title, author, price}");
 
-    private void addBook() throws IOException {
-        Book book = readBook();
+        String title = bufferedReader.readLine();
+        String author = bufferedReader.readLine();
+        double price = Double.parseDouble(bufferedReader.readLine());
 
-        bookService.save(book);
-
+        return new BookDTO(title, author, price);
     }
 
-    private void deleteBook() throws IOException{
+    public void addBook() throws IOException {
+        BookDTO savedBook = restTemplate.postForObject(URL_books, readBook(),BookDTO.class);
+        System.out.println("savedBook: " + savedBook);
+    }
+
+    public void deleteBook() throws IOException{
         long id = Long.parseLong(bufferedReader.readLine());
 
-        purchasedService.getAll().forEach(purchased ->
-        {if(purchased.getBookID()==id)purchasedService.delete(purchased.getId());});
-
-        bookService.delete(id);
+        restTemplate.delete(URL_books + "/{id}", id);
     }
 
-    private void updateBook() throws IOException {
-
+    public void updateBook() throws IOException{
         Long id=Long.parseLong(bufferedReader.readLine());
         String title = bufferedReader.readLine();
         String author = bufferedReader.readLine();
         double price = Double.parseDouble(bufferedReader.readLine());
 
         Book updatedBook = new Book(title, author, price);
-        updatedBook.setId(id);
 
-        bookService.update(updatedBook);
-
+        restTemplate.put(URL_books + "/{id}", updatedBook, id);
     }
 
-    private Book readBook() throws IOException{
-            System.out.println("Read book {id,title, author, price}");
-
-            //Long id = Long.valueOf(bufferedReader.readLine());
-            String title = bufferedReader.readLine();
-            String author = bufferedReader.readLine();
-            double price = Double.parseDouble(bufferedReader.readLine());
-
-            Book book = new Book(title, author, price);
-            //book.setId(id);
-
-            return book;
+    public void printAllClients(){
+        ClientsDTO clients = restTemplate.getForObject(URL_clients, ClientsDTO.class);
+        System.out.println(clients);
     }
 
-    private Client readClient() throws  IOException{
+    private ClientDTO readClient() throws  IOException{
         System.out.println("Read client {id, name1, name2, age}");
 
-        Long id = Long.valueOf(bufferedReader.readLine());
         String name1 = bufferedReader.readLine();
         String name2 = bufferedReader.readLine();
         int age = Integer.parseInt(bufferedReader.readLine());
 
-        Client client=new Client(name1, name2, age);
-        client.setId(id);
-
-        return client;
+        return new ClientDTO(name1, name2, age);
     }
 
-    private void addClient() throws IOException {
-        Client client=readClient();
-
-        clientService.save(client);
+    private void addClient() throws IOException{
+        ClientDTO savedClient = restTemplate.postForObject(URL_books, readClient(), ClientDTO.class);
+        System.out.println(savedClient);
     }
 
-    private void deleteClient() throws IOException {
+    private void deleteClient() throws IOException{
         long id = Long.parseLong(bufferedReader.readLine());
-
-        purchasedService.getAll().forEach(purchased ->
-        {if(purchased.getClientID()==id)purchasedService.delete(purchased.getId());});
-
-        clientService.delete(id);
+        restTemplate.delete(URL_books + "/{id}", id);
     }
 
     private void updateClient() throws IOException{
-        Long id = Long.valueOf(bufferedReader.readLine());
+        Long id=Long.parseLong(bufferedReader.readLine());
         String name1 = bufferedReader.readLine();
         String name2 = bufferedReader.readLine();
         int age = Integer.parseInt(bufferedReader.readLine());
 
-        Client client = new Client(name1, name2, age);
-        client.setId(id);
+        ClientDTO clientDTO = new ClientDTO(name1, name2, age);
 
-        clientService.update(client);
+        restTemplate.put(URL_clients + "/{id}", clientDTO, id);
     }
 
-    private void printAllClients() {
-        List<Client> clients = clientService.getAll();
-        clients.forEach(System.out::println);
+    private void printPurchased(){
+        PurchasedsDTO purchasedsDTO = restTemplate.getForObject(URL_purchased, PurchasedsDTO.class);
+        System.out.println(purchasedsDTO);
     }
 
-
-
-    private Purchased readPurchased() throws IOException{
+    private PurchasedDTO readPurchased() throws IOException{
         System.out.println("Read purchased {id, bookID, clientID}");
 
-        Long id = Long.valueOf(bufferedReader.readLine());
         long bookID= Long.parseLong(bufferedReader.readLine());
         long clientID= Long.parseLong(bufferedReader.readLine());
 
-        Purchased purchased=new Purchased(bookID, clientID);
-        purchased.setId(id);
-
-        return purchased;
-
+        return new PurchasedDTO(bookID, clientID);
     }
 
-    private void buyBook() throws IOException, RuntimeException {
-        Purchased purchased=readPurchased();
-
-        bookService.getOne(purchased.getBookID());
-        clientService.getOne(purchased.getClientID());
-
-        purchasedService.save(purchased);
-
+    private void buyBook() throws IOException{
+        PurchasedDTO bought = restTemplate.postForObject(URL_purchased, readPurchased(), PurchasedDTO.class);
+        System.out.println(bought);
     }
 
-    private void printPurchased() {
-        List<Purchased> purchaseds = purchasedService.getAll();
-        purchaseds.forEach(System.out::println);
-    }
 }

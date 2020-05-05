@@ -1,24 +1,18 @@
 package service;
 
 import domain.Client;
-import repo.SortingRepository;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.List;
+import java.util.Optional;
 
+public interface ClientService {
+    List<Client> getAll();
 
-public class ClientService extends Service<Long, Client> {
+    void save(Client client);
 
-    public ClientService(SortingRepository<Long, Client> repository){
-        super(repository);
-    }
+    void update(Client client);
 
-    public Set<Client> filterClientsByAge(int age){
-        Iterable<Client> clients=super.getAll();
+    void delete(Long id);
 
-        return StreamSupport.stream(clients.spliterator(), false)
-                .filter(client -> client.getAge() < age).collect(Collectors.toSet());
-    }
-
+    Optional<Client> getOne(Long id);
 }

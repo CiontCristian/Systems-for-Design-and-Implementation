@@ -1,6 +1,7 @@
-package service;
+package lab10.core.service;
 
-import domain.Book;
+
+import lab10.core.domain.Book;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,13 +9,13 @@ import java.util.Optional;
 public interface BookService {
     List<Book> getAll();
 
-    void save(Book book);
+    Book save(Book book);
 
-    void update(Book book);
+    Book update(Long id, Book book);
 
     void delete(Long id);
 
-    Optional<Book> getOne(Long id);
+    Book getOne(Long id);
 
     List<Book> sortAll();
 }

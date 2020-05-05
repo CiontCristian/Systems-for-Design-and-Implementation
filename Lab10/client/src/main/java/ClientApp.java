@@ -1,21 +1,13 @@
-
+import console.UI;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ui.Console;
 
-
-public class Main {
+public class ClientApp {
     public static void main(String[] args) {
-
-        System.out.println("hello");
-
         AnnotationConfigApplicationContext context =
                 new AnnotationConfigApplicationContext(
-                        "config"
+                        "configclient"
                 );
 
-        Console console = context.getBean(Console.class);
-        console.runMainConsole();
-
-        System.out.println("bye");
+        context.getBean(UI.class).runMainConsole();
     }
 }

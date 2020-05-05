@@ -1,4 +1,4 @@
-package domain;
+package lab10.core.domain;
 
 import lombok.*;
 
@@ -13,6 +13,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@Builder
 public class Book extends BaseEntity<Long> {
     private String title;
     private String author;

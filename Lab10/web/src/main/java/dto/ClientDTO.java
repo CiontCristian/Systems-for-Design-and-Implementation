@@ -1,21 +1,19 @@
-package domain;
+package dto;
 
+import lab10.core.domain.BaseEntity;
 import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "book")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class Book extends BaseEntity<Long> {
-    private String title;
-    private String author;
-    private double price;
-
+@Builder
+public class ClientDTO extends BaseDTO {
+    private String FirstName;
+    private String LastName;
+    private int age;
 }

@@ -1,4 +1,4 @@
-package domain;
+package lab10.core.domain;
 
 import lombok.*;
 

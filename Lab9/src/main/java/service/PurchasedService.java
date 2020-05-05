@@ -1,11 +1,18 @@
 package service;
 
 import domain.Purchased;
-import repo.SortingRepository;
 
-public class PurchasedService extends Service<Long, Purchased> {
+import java.util.List;
+import java.util.Optional;
 
-    public PurchasedService(SortingRepository<Long, Purchased> repository){
-        super(repository);
-    }
+public interface PurchasedService {
+    List<Purchased> getAll();
+
+    void save(Purchased purchased);
+
+    void update(Purchased purchased);
+
+    void delete(Long id);
+
+    Optional<Purchased> getOne(Long id);
 }

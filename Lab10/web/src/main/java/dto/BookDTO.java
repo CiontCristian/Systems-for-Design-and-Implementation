@@ -1,21 +1,15 @@
-package domain;
+package dto;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "book")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class Book extends BaseEntity<Long> {
+@Builder
+public class BookDTO extends BaseDTO{
     private String title;
     private String author;
     private double price;
-
 }
