@@ -1,0 +1,7 @@
+<ol class="tran">
+  <li *ngFor="let tran of transactions">
+    {{tran.book.title}}
+    {{tran.client.firstName}}
+    {{tran.date | date }}
+  </li>
+</ol>

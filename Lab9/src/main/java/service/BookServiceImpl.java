@@ -33,6 +33,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void update(Book book) {
         log.trace("update - method entered: book={}", book);
         bookRepository.findById(book.getId())
@@ -40,7 +41,7 @@ public class BookServiceImpl implements BookService {
                     book1.setTitle(book.getTitle());
                     book1.setAuthor(book.getAuthor());
                     book1.setPrice(book.getPrice());
-                    bookRepository.saveAndFlush(book1);
+                    //bookRepository.saveAndFlush(book1);
                     log.trace("update - book update: book={}", book1);
                 });
         log.trace("update - method finished");

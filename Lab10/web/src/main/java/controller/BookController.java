@@ -3,6 +3,7 @@ package controller;
 import converter.BookConverter;
 import dto.BookDTO;
 import dto.BooksDTO;
+import lab10.core.domain.Book;
 import lab10.core.service.BookService;
 import lab10.core.service.BookServiceImpl;
 import org.slf4j.Logger;
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -42,11 +46,6 @@ public class BookController {
         return bookConverter.convertModelToDto(bookService.update(id, bookConverter.convertDtoToModel(bookDTO)));
     }
 
-    @RequestMapping(value = "/books/{id}", method = RequestMethod.POST)
-    BookDTO getOne(@PathVariable Long id){
-        return bookConverter.convertModelToDto(bookService.getOne(id));
-    }
-
     @RequestMapping(value = "/books/{id}", method = RequestMethod.DELETE)
     ResponseEntity<?> deleteBook(@PathVariable Long id){
         bookService.delete(id);
@@ -54,11 +53,11 @@ public class BookController {
     }
 
     @RequestMapping(value = "/books/sorted", method = RequestMethod.GET)
-    BooksDTO getSortedBooks(){
+    List<BookDTO> getSortedBooks(){
         logger.trace("getSortedBooks - method entered");
-        BooksDTO booksDTO = new BooksDTO(bookConverter.convertModelsToDtos(bookService.sortAll()));
-        logger.trace("getSortedBooks - books:{}", booksDTO);
+        List<Book> books = bookService.sortAll();
+        logger.trace("getSortedBooks - books:{}", books);
         logger.trace("getSortedBooks - method finished!");
-        return booksDTO;
+        return new ArrayList<>(bookConverter.convertModelsToDtos(books));
     }
 }

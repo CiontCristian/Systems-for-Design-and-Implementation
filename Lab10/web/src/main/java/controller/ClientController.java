@@ -32,11 +32,6 @@ public class ClientController {
         return clientConverter.convertModelToDto(clientService.update(id, clientConverter.convertDtoToModel(clientDTO)));
     }
 
-    @RequestMapping(value = "/clients/{id}", method = RequestMethod.POST)
-    ClientDTO getOne(@PathVariable Long id){
-        return clientConverter.convertModelToDto(clientService.getOne(id));
-    }
-
     @RequestMapping(value = "clients/{id}", method = RequestMethod.DELETE)
     ResponseEntity<?> deleteClient(@PathVariable Long id){
         clientService.delete(id);

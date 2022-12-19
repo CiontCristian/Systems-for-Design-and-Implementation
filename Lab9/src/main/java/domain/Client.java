@@ -3,16 +3,17 @@ package domain;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "client")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@Inheritance(strategy = InheritanceType.JOINED)
 @ToString(callSuper = true)
+@Data
 public class Client extends BaseEntity<Long> {
     private String FirstName;
     private String LastName;

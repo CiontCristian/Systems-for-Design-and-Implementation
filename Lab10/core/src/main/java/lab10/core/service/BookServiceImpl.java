@@ -79,7 +79,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> sortAll() {
         log.trace("sortAll - method entered!");
-        List<Book> sorted = bookRepository.findAll(Sort.by(Sort.Direction.DESC, "author", "price"));
+        List<Book> sorted = bookRepository.findAll(Sort.by(Sort.Direction.DESC, "price"));
         log.trace("sortAll - books: {}", sorted);
         log.trace("sortAll - method finished!");
         return sorted;

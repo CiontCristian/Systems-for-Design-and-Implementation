@@ -1,0 +1,12 @@
+<label>Please Select A Book And A Client First:
+  <br/>
+</label>
+
+<label>Date:
+  <input type="date" #date/>
+  <br/>
+</label>
+
+<button *ngIf="book !== null && client !== null" (click)="savePurchased(date.value)">
+  Save
+</button>

@@ -1,0 +1,37 @@
+
+<div *ngIf="selectedBook">
+  <h2>{{selectedBook.title | uppercase}} was selected</h2>
+  <button (click)="gotoDetail()">View Details</button>
+</div>
+
+<h2>Books</h2>
+<ol class="books">
+  <li *ngFor="let book of books"
+    [class.selected]="book === selectedBook"
+    (click)="onSelect(book)">
+    {{book.title}}
+    {{book.author}}
+    {{book.price}}
+
+    <button [class.delete]="true"
+            (click)="deleteBook(book);$event.stopPropagation()">Delete</button>
+  </li>
+</ol>
+<div class="sort">
+  <label><b>Sort:</b>
+    <input type="radio" value="title" [(ngModel)]="sortType" name="sort">Title
+    <input type="radio" value="author" [(ngModel)]="sortType" name="sort">Author
+    <input type="radio" value="price" [(ngModel)]="sortType" name="sort">Price
+  </label>
+    <button (click)="getSortedBooks()">Sort</button><br/><br/>
+</div>
+<div>
+  <label><b>Filter:</b>
+    <input type="radio" value="title" [(ngModel)]="filterType" name="filter">Title
+    <input type="radio" value="author" [(ngModel)]="filterType" name="filter">Author
+    <input type="radio" value="price" [(ngModel)]="filterType" name="filter">Price
+    <input type="text" #filterValue>
+  </label>
+  <button (click)="getFilteredBooks(filterValue.value)">Filter</button><br/><br/>
+</div>
+

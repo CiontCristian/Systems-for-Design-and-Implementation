@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 @Component
 public class UI {
@@ -153,7 +154,7 @@ public class UI {
     }
 
     public void printSortedBooks(){
-        BooksDTO sortedBooks = restTemplate.getForObject(URL_books + "/sorted", BooksDTO.class);
+        List<BookDTO> sortedBooks = (List<BookDTO>) restTemplate.getForObject(URL_books + "/sorted", BooksDTO.class);
         System.out.println(sortedBooks);
     }
 
@@ -184,7 +185,7 @@ public class UI {
         String author = bufferedReader.readLine();
         double price = Double.parseDouble(bufferedReader.readLine());
 
-        Book updatedBook = new Book(title, author, price);
+        BookDTO updatedBook = new BookDTO(title, author, price);
 
         restTemplate.put(URL_books + "/{id}", updatedBook, id);
     }
